@@ -1,0 +1,70 @@
+
+*droidlink* - library for Android which implements JPA (it is fully based on EclipseLink). Java is about write once, run everywhere. Java provides JPA as a standard way for doing ORM. You write code once using JPA and can seamlessly run it on different ORM frameworks. Unfortunately it is not the case for existing ORMs for Android. Most of them provide their fancy API and does not support JPA. It means that you cannot take your existing ORM logic used in non Android environment and use it as-is.
+
+lambdaprime <id.blackmesa@gmail.com>
+
+* Install
+
+Following commands will install *droidlink* into you local maven repo.
+
+#+BEGIN_EXAMPLE
+git clone https://github.com/lambdaprime/droidlink.git
+mvn install
+#+END_EXAMPLE
+
+* Usage
+
+To use droidlink you need to make following changes to your maven project:
+
+1. Add dependencies
+
+  #+BEGIN_EXAMPLE
+  <dependency>
+      <groupId>id</groupId>
+      <artifactId>id.droidlink</artifactId>
+      <version>2.5.3-SNAPSHOT</version>
+      <scope>compile</scope>
+  </dependency>
+  <dependency>
+      <groupId>org.sqldroid</groupId>
+      <artifactId>sqldroid</artifactId>
+      <version>1.0.3</version>
+  </dependency>
+  #+END_EXAMPLE
+
+2. Include execution of id.droidlink.EntitiesHarvester specifying the persistence unit name:
+
+  #+BEGIN_EXAMPLE
+  <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.6.0</version>
+    <executions>
+      <execution>
+        <phase>compile</phase>
+        <goals>
+          <goal>exec</goal>
+        </goals>
+      </execution>
+    </executions>
+    <configuration>
+      <executable>java</executable>
+      <arguments>
+      <argument>-classpath</argument>
+      <classpath/>
+      <argument>id.droidlink.EntitiesHarvester</argument>
+        <!-- * PERSISTENCE UNIT NAME * -->
+        <argument>cards</argument>
+        <argument>assets/entities</argument>
+      </arguments>
+      <addResourcesToClasspath>true</addResourcesToClasspath>
+    </configuration>
+  </plugin>
+  #+END_EXAMPLE
+
+Make sure you specify the correct name of your persistence unit.
+EntitiesHarvester gathers your entity class files specified in persistence unit and stores them into assets/entities dir.
+
+* Examples
+
+https://github.com/lambdaprime/droidlink-sample
