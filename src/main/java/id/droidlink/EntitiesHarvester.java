@@ -69,11 +69,15 @@ public class EntitiesHarvester {
                     Path parent = output.resolve(resFile.getParent());
                     parent.toFile().mkdirs();
                     InputStream is = getClass().getClassLoader().getResourceAsStream(resName);
+                    if (is == null) {
+                        throw new RuntimeException(String.format("Class '%s' is not found", resName));
+                    }
                     Files.copy(is, output.resolve(resName));
                     return getClass().getClassLoader().getResourceAsStream(resName);
                 } catch (Exception e) {
-                    LOGGER.severe(String.format("Failed to copy entity '%s'", e.getMessage()));
+                    LOGGER.severe(String.format("Failed to copy entity '%s'", resName));
                     ret[0] = -1;
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
@@ -88,7 +92,7 @@ public class EntitiesHarvester {
             return -1;
         }
 
-        return 0;
+        return ret[0];
     }
     
     public static void main(String[] args) throws IOException {
